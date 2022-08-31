@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Controller Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float gravityModifier = 5f;
     [SerializeField] private Transform cameraTransform;
 
     [Header("Mouse Settings")]
@@ -23,13 +24,26 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // store y velocity
+        float yStore = moveInput.y;
 
-        Vector3 verticalMovement = transform.forward * Input.GetAxis("Vertical");
-        Vector3 horizontalMovement = transform.right * Input.GetAxis("Horizontal");
+
+        Vector3 verticalMovement = transform.forward * Input.GetAxisRaw("Vertical");
+        Vector3 horizontalMovement = transform.right * Input.GetAxisRaw("Horizontal");
 
         moveInput = horizontalMovement + verticalMovement;
         moveInput.Normalize();
         moveInput *= moveSpeed;
+        
+        moveInput.y = yStore;
+
+
+        moveInput.y += Physics.gravity.y * gravityModifier;
+
+        if(characterController.isGrounded)
+        {
+            moveInput.y = Physics.gravity.y * gravityModifier;
+        }
 
         characterController.Move(moveInput * Time.deltaTime);
 
