@@ -37,12 +37,11 @@ public class PlayerController : MonoBehaviour
         
         moveInput.y = yStore;
 
-
-        moveInput.y += Physics.gravity.y * gravityModifier;
+        moveInput.y += Physics.gravity.y * gravityModifier * Time.deltaTime;
 
         if(characterController.isGrounded)
         {
-            moveInput.y = Physics.gravity.y * gravityModifier;
+            moveInput.y = Physics.gravity.y * gravityModifier * Time.deltaTime;
         }
 
         characterController.Move(moveInput * Time.deltaTime);
